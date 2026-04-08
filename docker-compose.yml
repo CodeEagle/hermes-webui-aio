@@ -4,7 +4,6 @@ services:
     build: ./hermes
     container_name: hermes
     restart: unless-stopped
-    # Exposes agent service internally; adjust ports if needed
     ports:
       - "5005:5005"
 
@@ -15,7 +14,9 @@ services:
     depends_on:
       - hermes
     environment:
-      # Configure the web UI to talk to the agent by service name
+      - HERMES_WEBUI_AGENT_DIR=/opt/hermes-agent
       - HERMES_AGENT_URL=http://hermes:5005
+    volumes:
+      - ./hermes:/opt/hermes-agent:ro
     ports:
       - "8787:8787"
