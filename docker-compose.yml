@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  hermes:
+    build: ./hermes
+    container_name: hermes
+    restart: unless-stopped
+    # Exposes agent service internally; adjust ports if needed
+    ports:
+      - "5005:5005"
+
+  hermes-webui:
+    build: ./hermes-webui
+    container_name: hermes-webui
+    restart: unless-stopped
+    depends_on:
+      - hermes
+    environment:
+      # Configure the web UI to talk to the agent by service name
+      - HERMES_AGENT_URL=http://hermes:5005
+    ports:
+      - "8787:8787"
